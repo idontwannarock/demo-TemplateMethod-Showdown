@@ -1,4 +1,4 @@
-package org.example;
+package org.example.showdown.cards;
 
 public enum Suit {
     CLUB(1, "♣"),

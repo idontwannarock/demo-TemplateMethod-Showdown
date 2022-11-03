@@ -1,6 +1,6 @@
-# Demo Template Method Pattern - Showdown
+# Demo Template Method Pattern
 
-Demo project to implement Showdown game before refactoring with Template Method pattern.
+Demo project to implement Showdown and Simplified Uno games and to refactor with Template Method pattern.
 
 ## Pre-requisite
 

@@ -1,4 +1,4 @@
-package org.example;
+package org.example.showdown.cards;
 
 public enum Rank {
     TWO(2, "2"),
