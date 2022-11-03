@@ -8,8 +8,13 @@ public class App {
 
     public static void main(String[] args) {
         // showdown
-        new Game()
-                .join(new HumanPlayer(new CommandLineInterface()))
+//        new Game()
+//                .join(new HumanPlayer(new CommandLineInterface()))
+//                .start();
+
+        // uno
+        new org.example.uno.Game()
+                .join(new org.example.uno.players.HumanPlayer(new org.example.uno.players.CommandLineInterface()))
                 .start();
     }
 }
