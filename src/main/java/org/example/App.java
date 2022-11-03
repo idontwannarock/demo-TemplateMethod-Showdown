@@ -1,6 +1,6 @@
 package org.example;
 
-import org.example.showdown.cards.Game;
+import org.example.showdown.Game;
 import org.example.showdown.players.CommandLineInterface;
 import org.example.showdown.players.HumanPlayer;
 
@@ -10,6 +10,6 @@ public class App {
         // showdown
         new Game()
                 .join(new HumanPlayer(new CommandLineInterface()))
-                .play();
+                .start();
     }
 }

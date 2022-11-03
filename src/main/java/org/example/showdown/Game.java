@@ -1,4 +1,4 @@
-package org.example.showdown.cards;
+package org.example.showdown;
 
 import org.example.showdown.players.AiPlayer;
 import org.example.showdown.players.Player;
@@ -31,12 +31,12 @@ public class Game {
         return this;
     }
 
-    public void play() {
+    public void start() {
         setUpPlayers();
         namePlayers();
         shuffleDeck();
         drawCards();
-        playRounds();
+        play();
         settleGame();
     }
 
@@ -73,7 +73,7 @@ public class Game {
         }
     }
 
-    private void playRounds() {
+    private void play() {
         for (int round = 0; round < this.rounds; round++) {
             this.players.forEach(Player::showCard);
             this.players.stream()

@@ -1,4 +1,6 @@
-package org.example.showdown.cards;
+package org.example.showdown;
+
+import org.example.showdown.cards.Card;
 
 import java.util.ArrayList;
 import java.util.List;

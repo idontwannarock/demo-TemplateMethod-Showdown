@@ -1,4 +1,8 @@
-package org.example.showdown.cards;
+package org.example.showdown;
+
+import org.example.showdown.cards.Card;
+import org.example.showdown.cards.Rank;
+import org.example.showdown.cards.Suit;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,8 +1,8 @@
 package org.example.showdown.players;
 
+import org.example.showdown.Hand;
 import org.example.showdown.cards.Card;
-import org.example.showdown.cards.Deck;
-import org.example.showdown.cards.Hand;
+import org.example.showdown.Deck;
 
 public abstract class Player {
 
