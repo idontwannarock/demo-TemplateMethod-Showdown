@@ -12,20 +12,16 @@ import org.example.uno.players.UnoHumanPlayer;
  * Unit test for simple App.
  */
 public class DemoTemplateMethodApplicationTest extends TestCase {
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
+
     public DemoTemplateMethodApplicationTest(String testName) {
-        super( testName );
+        super(testName);
     }
 
     /**
      * @return the suite of tests being tested
      */
     public static Test suite() {
-        return new TestSuite( DemoTemplateMethodApplicationTest.class );
+        return new TestSuite(DemoTemplateMethodApplicationTest.class);
     }
 
     public void testShowdownGame() {
