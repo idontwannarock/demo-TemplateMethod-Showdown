@@ -13,7 +13,7 @@ public abstract class Game<C extends Card<C>, H extends Hand<C>, P extends Playe
 
     protected final D deck;
 
-    private final int playerSize;
+    protected final int playerSize;
 
     public Game(D deck, int playerSize) {
         this.players = new ArrayList<>();
