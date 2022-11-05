@@ -1,10 +1,12 @@
-package org.example.uno;
+package org.example.game.showdown;
 
-import org.example.uno.cards.Card;
-import org.example.uno.players.AiPlayer;
-import org.example.uno.players.Player;
+import org.example.players.showdown.AiPlayer;
+import org.example.players.showdown.Player;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Game {
@@ -13,19 +15,19 @@ public class Game {
 
     private final Deck deck;
 
-    private Stack<Card> pool;
+    private final int rounds;
 
     public Game() {
-        this.players = new LinkedList<>();
+        this.players = new ArrayList<>();
         this.deck = new Deck();
-        this.pool = new Stack<>();
+        this.rounds = 13;
     }
 
     public Game join(Player player) {
-        if (players.size() == 4) {
+        if (this.players.size() == 4) {
             throw new IllegalArgumentException("Too many players!");
         }
-        players.add(player);
+        this.players.add(player);
         return this;
     }
 
@@ -66,37 +68,30 @@ public class Game {
     }
 
     private void drawCards() {
-        IntStream.range(0, 5).forEach(i -> players.forEach(player -> player.drawCard(deck)));
+        while (this.deck.hasCardLeft()) {
+            this.players.forEach(player -> player.drawCard(this.deck));
+        }
     }
 
     private void play() {
-        this.pool.push(this.deck.drawCard());
-        while (this.players.stream().allMatch(Player::hasCardLeft)) {
-            Player current = players.remove(0);
-            Card top = pool.peek();
-
-            Card chosen = current.showMatchedCard(top);
-
-            if (chosen == null) {
-                current.drawCard(deck);
-            } else {
-                pool.push(chosen);
-            }
-
-            if (deck.isEmpty()) {
-                pool.pop();
-                deck.shuffleBack(pool);
-                pool = new Stack<>();
-                pool.push(top);
-            }
-
-            this.players.add(3, current);
+        for (int round = 0; round < this.rounds; round++) {
+            this.players.forEach(Player::showCard);
+            this.players.stream()
+                    .collect(Collectors.toMap(Player::revealCard, player -> player))
+                    .entrySet()
+                    .stream()
+                    .reduce((entry1, entry2) -> entry1.getKey().compare(entry2.getKey()) > 0 ? entry1 : entry2)
+                    .ifPresent(entry -> {
+                        entry.getValue().addPoint();
+                        System.out.println("Winner of this round is " + entry.getValue().getName());
+                        System.out.println();
+                    });
         }
     }
 
     private void settleGame() {
         this.players.stream()
-                .min(Comparator.comparingInt(Player::cardCount))
-                .ifPresent(player -> System.out.println("Game winner is " + player.getName()));
+                .reduce((player1, player2) -> player1.getPoints() - player2.getPoints() > 0 ? player1 : player2)
+                .ifPresent(player -> System.out.println("Game winner is " + player.getName() + "!"));
     }
 }

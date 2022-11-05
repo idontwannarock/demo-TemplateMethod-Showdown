@@ -1,8 +1,8 @@
-package org.example.showdown;
+package org.example.game.showdown;
 
-import org.example.showdown.cards.Card;
-import org.example.showdown.cards.Rank;
-import org.example.showdown.cards.Suit;
+import org.example.cards.showdown.Card;
+import org.example.cards.showdown.Rank;
+import org.example.cards.showdown.Suit;
 
 import java.util.ArrayList;
 import java.util.Collections;

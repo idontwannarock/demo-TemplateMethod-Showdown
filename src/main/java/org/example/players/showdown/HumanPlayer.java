@@ -1,4 +1,4 @@
-package org.example.showdown.players;
+package org.example.players.showdown;
 
 public class HumanPlayer extends Player {
 

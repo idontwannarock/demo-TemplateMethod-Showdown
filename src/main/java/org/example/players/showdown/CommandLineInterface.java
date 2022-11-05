@@ -1,6 +1,6 @@
-package org.example.showdown.players;
+package org.example.players.showdown;
 
-import org.example.showdown.cards.Card;
+import org.example.cards.showdown.Card;
 
 import java.util.List;
 import java.util.Scanner;

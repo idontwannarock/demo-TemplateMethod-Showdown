@@ -1,6 +1,6 @@
-package org.example.uno.players;
+package org.example.players.uno;
 
-import org.example.uno.cards.Card;
+import org.example.cards.uno.Card;
 
 import java.util.List;
 import java.util.Scanner;

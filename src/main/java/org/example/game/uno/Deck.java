@@ -1,7 +1,7 @@
-package org.example.uno;
+package org.example.game.uno;
 
-import org.example.uno.cards.Card;
-import org.example.uno.cards.Color;
+import org.example.cards.uno.Card;
+import org.example.cards.uno.Color;
 
 import java.util.ArrayList;
 import java.util.Collections;

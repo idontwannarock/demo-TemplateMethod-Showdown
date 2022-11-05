@@ -1,8 +1,8 @@
-package org.example.uno.players;
+package org.example.players.uno;
 
-import org.example.uno.Deck;
-import org.example.uno.Hand;
-import org.example.uno.cards.Card;
+import org.example.game.uno.Deck;
+import org.example.game.uno.Hand;
+import org.example.cards.uno.Card;
 
 import java.util.List;
 

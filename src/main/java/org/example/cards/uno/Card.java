@@ -1,4 +1,4 @@
-package org.example.uno.cards;
+package org.example.cards.uno;
 
 public class Card {
 
