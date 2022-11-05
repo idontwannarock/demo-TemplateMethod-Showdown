@@ -1,11 +1,11 @@
 package org.example.players.uno;
 
-import org.example.cards.uno.Card;
+import org.example.cards.uno.UnoCard;
 
 import java.util.List;
 import java.util.Random;
 
-public class AiPlayer extends Player {
+public class UnoAiPlayer extends UnoPlayer {
 
     @Override
     public void nameHimself() {
@@ -13,8 +13,8 @@ public class AiPlayer extends Player {
     }
 
     @Override
-    public Card showMatchedCard(Card top) {
-        List<Card> matchedCards = this.matchCards(top);
+    public UnoCard showMatchedCard(UnoCard top) {
+        List<UnoCard> matchedCards = this.matchCards(top);
         if (matchedCards.isEmpty()) {
             return null;
         }

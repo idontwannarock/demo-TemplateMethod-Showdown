@@ -1,11 +1,11 @@
-package org.example.players.uno;
+package org.example.players;
 
-import org.example.cards.uno.Card;
+import org.example.cards.Card;
 
 import java.util.List;
 import java.util.Scanner;
 
-public class CommandLineInterface {
+public class CommandLineInterface<T extends Card<T>> {
 
     private final Scanner scanner = new Scanner(System.in);
 
@@ -16,16 +16,16 @@ public class CommandLineInterface {
         return name;
     }
 
-    public Card choose(List<Card> cards) {
+    public T choose(List<T> cards) {
         printCards(cards);
-        Card card = cards.get(scanner.nextInt());
+        T card = cards.get(scanner.nextInt());
         System.out.println("You choose " + card.toString() + ".");
         System.out.println();
         return card;
     }
 
-    private void printCards(List<Card> cards) {
-        System.out.println("Here are your matched cards at hand:");
+    private void printCards(List<T> cards) {
+        System.out.println("Here are your cards at hand:");
         for (int index = 0; index < cards.size(); index++) {
             System.out.println(index + ": " + cards.get(index).toString());
         }
