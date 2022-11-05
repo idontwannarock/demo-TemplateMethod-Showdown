@@ -18,6 +18,10 @@ public class ShowdownHumanPlayer extends ShowdownPlayer {
 
     @Override
     public void showCard() {
-        this.hand.show(commandLineInterface.choose(this.hand.lookup()));
+        ShowdownCard chosen;
+        do {
+            chosen = commandLineInterface.choose(this.hand.lookup());
+        } while (chosen == null);
+        this.hand.show(chosen);
     }
 }

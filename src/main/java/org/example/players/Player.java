@@ -21,4 +21,10 @@ public abstract class Player<C extends Card<C>, H extends Hand<C>> {
     public void drawCard(Deck<C> deck) {
         this.hand.addCard(deck.drawCard());
     }
+
+    public C revealCard() {
+        C revealedCard = this.hand.revealCard();
+        System.out.println("Player " + getName() + " has played " + revealedCard.toString());
+        return revealedCard;
+    }
 }

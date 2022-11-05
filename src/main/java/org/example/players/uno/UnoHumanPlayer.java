@@ -3,8 +3,6 @@ package org.example.players.uno;
 import org.example.cards.uno.UnoCard;
 import org.example.players.CommandLineInterface;
 
-import java.util.List;
-
 public class UnoHumanPlayer extends UnoPlayer {
 
     private final CommandLineInterface<UnoCard> commandLineInterface;
@@ -19,14 +17,19 @@ public class UnoHumanPlayer extends UnoPlayer {
     }
 
     @Override
-    public UnoCard showMatchedCard(UnoCard top) {
-        System.out.println("The card on the top of the pool is " + top.toString());
-        List<UnoCard> matchedCards = this.matchCards(top);
-        if (matchedCards.isEmpty()) {
-            System.out.println("You have no matched card in hand.");
-            return null;
-        }
-        UnoCard chosen = commandLineInterface.choose(matchedCards);
-        return this.hand.choose(chosen);
+    public void showCard(UnoCard top) {
+        UnoCard chosen;
+        do {
+            chosen = commandLineInterface.choose(this.hand.lookup());
+        } while (hasChosenCard(chosen) && isChosenCardNotMatchedTopCard(chosen, top));
+        this.hand.show(chosen);
+    }
+
+    private boolean hasChosenCard(UnoCard chosen) {
+        return chosen != null;
+    }
+
+    private boolean isChosenCardNotMatchedTopCard(UnoCard chosen, UnoCard top) {
+        return chosen.compare(top) < 0;
     }
 }

@@ -6,37 +6,32 @@ import org.example.players.showdown.ShowdownAiPlayer;
 import org.example.players.showdown.ShowdownHand;
 import org.example.players.showdown.ShowdownPlayer;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ShowdownGame extends Game<ShowdownCard, ShowdownHand, ShowdownPlayer, ShowdownDeck> {
 
-    private final int rounds;
+    private final static int TOTAL_ROUNDS = 13;
 
     public ShowdownGame() {
         super(new ShowdownDeck(), 4);
-        this.rounds = 13;
     }
 
     @Override
-    protected void setUpPlayers() {
-        if (notEnoughPlayers()) {
-            addAiPlayers();
-        }
-        shufflePlayerOrder();
+    protected void addOneAiPlayer() {
+        this.players.add(new ShowdownAiPlayer());
     }
 
     @Override
     protected void drawCards() {
         while (deckIsNotDrained()) {
-            eachPlayersDrawsOneCard();
+            eachPlayerDrawsOneCard();
         }
     }
 
     @Override
     protected void play() {
-        for (int round = 0; round < this.rounds; round++) {
+        for (int round = 0; round < TOTAL_ROUNDS; round++) {
             eachPlayersShowsOneCard();
             Map<ShowdownCard, ShowdownPlayer> revealedCards = revealAllShowedCards();
             ShowdownPlayer winner = findWinner(revealedCards);
@@ -45,35 +40,14 @@ public class ShowdownGame extends Game<ShowdownCard, ShowdownHand, ShowdownPlaye
     }
 
     @Override
-    protected void settleGame() {
-        ShowdownPlayer winner = findGameWinner();
-        printGameWinnerName(winner);
-    }
-
-    private boolean notEnoughPlayers() {
-        return this.players.size() < this.playerSize;
-    }
-
-    private void addAiPlayers() {
-        for (int playerCount = 0; playerCount < this.playerSize - this.players.size(); playerCount++) {
-            addOneAiPlayer();
-        }
-    }
-
-    private void addOneAiPlayer() {
-        this.players.add(new ShowdownAiPlayer());
-    }
-
-    private void shufflePlayerOrder() {
-        Collections.shuffle(this.players);
+    protected void findGameWinner() {
+        this.winner = this.players.stream()
+                .reduce((player1, player2) -> player1.getPoints() - player2.getPoints() > 0 ? player1 : player2)
+                .orElseThrow();
     }
 
     private boolean deckIsNotDrained() {
         return this.deck.hasCardLeft();
-    }
-
-    private void eachPlayersDrawsOneCard() {
-        this.players.forEach(player -> player.drawCard(this.deck));
     }
 
     private void eachPlayersShowsOneCard() {
@@ -98,15 +72,5 @@ public class ShowdownGame extends Game<ShowdownCard, ShowdownHand, ShowdownPlaye
         winner.addPoint();
         System.out.println("Winner of this round is " + winner.getName());
         System.out.println();
-    }
-
-    private ShowdownPlayer findGameWinner() {
-        return this.players.stream()
-                .reduce((player1, player2) -> player1.getPoints() - player2.getPoints() > 0 ? player1 : player2)
-                .orElseThrow();
-    }
-
-    private void printGameWinnerName(ShowdownPlayer winner) {
-        System.out.println("Game winner is " + winner.getName() + "!");
     }
 }

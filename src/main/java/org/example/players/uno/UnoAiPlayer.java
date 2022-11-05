@@ -13,13 +13,13 @@ public class UnoAiPlayer extends UnoPlayer {
     }
 
     @Override
-    public UnoCard showMatchedCard(UnoCard top) {
+    public void showCard(UnoCard top) {
         List<UnoCard> matchedCards = this.matchCards(top);
         if (matchedCards.isEmpty()) {
-            return null;
+            return;
         }
         Random random = new Random();
         int chosen = random.nextInt(matchedCards.size());
-        return this.hand.choose(matchedCards.get(chosen));
+        this.hand.show(matchedCards.get(chosen));
     }
 }

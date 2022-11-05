@@ -14,12 +14,6 @@ public abstract class ShowdownPlayer extends Player<ShowdownCard, ShowdownHand> 
 
     public abstract void showCard();
 
-    public ShowdownCard revealCard() {
-        ShowdownCard revealedCard = hand.revealCard();
-        System.out.println("Player " + getName() + " played " + revealedCard.toString());
-        return revealedCard;
-    }
-
     public void addPoint() {
         this.points++;
     }

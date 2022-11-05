@@ -6,11 +6,12 @@ import org.example.players.uno.UnoAiPlayer;
 import org.example.players.uno.UnoHand;
 import org.example.players.uno.UnoPlayer;
 
-import java.util.*;
-import java.util.stream.IntStream;
+import java.util.Comparator;
+import java.util.Stack;
 
 public class UnoGame extends Game<UnoCard, UnoHand, UnoPlayer, UnoDeck> {
 
+    private final static int PLAYER_INITIAL_CARDS_COUNT = 5;
     private Stack<UnoCard> pool;
 
     public UnoGame() {
@@ -19,53 +20,87 @@ public class UnoGame extends Game<UnoCard, UnoHand, UnoPlayer, UnoDeck> {
     }
 
     @Override
-    protected void setUpPlayers() {
-        if (this.players.size() < 4) {
-            IntStream.range(0, 4 - this.players.size())
-                    .forEach(number -> addOneAiPlayer());
-        }
-        Collections.shuffle(this.players);
-    }
-
-    private void addOneAiPlayer() {
+    protected void addOneAiPlayer() {
         this.players.add(new UnoAiPlayer());
     }
 
     @Override
     protected void drawCards() {
-        IntStream.range(0, 5).forEach(i -> players.forEach(player -> player.drawCard(deck)));
-    }
-
-    @Override
-    protected void play() {
-        this.pool.push(this.deck.drawCard());
-        while (this.players.stream().allMatch(UnoPlayer::hasCardLeft)) {
-            UnoPlayer current = players.remove(0);
-            UnoCard top = pool.peek();
-
-            UnoCard chosen = current.showMatchedCard(top);
-
-            if (chosen == null) {
-                current.drawCard(deck);
-            } else {
-                pool.push(chosen);
-            }
-
-            if (deck.isDrain()) {
-                pool.pop();
-                deck.shuffleBack(pool);
-                pool = new Stack<>();
-                pool.push(top);
-            }
-
-            this.players.add(3, current);
+        for (int cardCount = 0; cardCount < PLAYER_INITIAL_CARDS_COUNT; cardCount++) {
+            eachPlayerDrawsOneCard();
         }
     }
 
     @Override
-    protected void settleGame() {
-        this.players.stream()
-                .min(Comparator.comparingInt(UnoPlayer::cardCount))
-                .ifPresent(player -> System.out.println("Game winner is " + player.getName()));
+    protected void play() {
+        drawOneCardFromDeckAndPutOnPoolTop();
+        while (everyPlayerHasCardLeftInHand()) {
+            UnoPlayer currentPlayer = getCurrentPlayer();
+            UnoCard currentTopCard = getTopCard();
+
+            UnoCard chosenCard = choose(currentPlayer, currentTopCard);
+
+            if (playerChoseNotToPlayCard(chosenCard)) {
+                playerDrawsOneCard(currentPlayer);
+            } else {
+                putCardOnPoolTop(chosenCard);
+            }
+
+            if (deckIsDrained()) {
+                shufflePollBackToDeck();
+                putCardOnPoolTop(currentTopCard);
+            }
+
+        }
+    }
+
+    @Override
+    protected void findGameWinner() {
+        this.winner = this.players.stream()
+                .min(Comparator.comparingInt(UnoPlayer::cardCount)).orElseThrow();
+    }
+
+    private void drawOneCardFromDeckAndPutOnPoolTop() {
+        this.pool.push(this.deck.drawCard());
+    }
+
+    private boolean everyPlayerHasCardLeftInHand() {
+        return this.players.stream().allMatch(UnoPlayer::hasCardLeft);
+    }
+
+    private UnoPlayer getCurrentPlayer() {
+        UnoPlayer current = players.remove(0);
+        this.players.add(3, current);
+        return current;
+    }
+
+    private UnoCard getTopCard() {
+        return pool.pop();
+    }
+
+    private UnoCard choose(UnoPlayer current, UnoCard top) {
+        current.showCard(top);
+        return current.revealCard();
+    }
+
+    private boolean playerChoseNotToPlayCard(UnoCard chosen) {
+        return chosen == null;
+    }
+
+    private void playerDrawsOneCard(UnoPlayer current) {
+        current.drawCard(deck);
+    }
+
+    private void putCardOnPoolTop(UnoCard chosen) {
+        pool.push(chosen);
+    }
+
+    private boolean deckIsDrained() {
+        return deck.isDrained();
+    }
+
+    private void shufflePollBackToDeck() {
+        deck.shuffleBack(pool);
+        pool = new Stack<>();
     }
 }

@@ -21,9 +21,4 @@ public class UnoHand extends Hand<UnoCard> {
                 .filter(card -> card.compare(target) == 1)
                 .collect(Collectors.toList());
     }
-
-    public UnoCard choose(UnoCard card) {
-        this.cards.remove(card);
-        return card;
-    }
 }

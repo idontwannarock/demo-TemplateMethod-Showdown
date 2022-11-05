@@ -11,7 +11,7 @@ public abstract class UnoPlayer extends Player<UnoCard, UnoHand> {
         super(new UnoHand());
     }
 
-    public abstract UnoCard showMatchedCard(UnoCard top);
+    public abstract void showCard(UnoCard top);
 
     public int cardCount() {
         return this.hand.cardCount();

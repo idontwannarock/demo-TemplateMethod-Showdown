@@ -26,7 +26,7 @@ public abstract class Deck<T extends Card<T>> {
         return !cards.isEmpty();
     }
 
-    public boolean isDrain() {
+    public boolean isDrained() {
         return cards.isEmpty();
     }
 }

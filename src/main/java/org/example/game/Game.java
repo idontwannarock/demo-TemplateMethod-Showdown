@@ -5,6 +5,7 @@ import org.example.players.Hand;
 import org.example.players.Player;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public abstract class Game<C extends Card<C>, H extends Hand<C>, P extends Player<C, H>, D extends Deck<C>> {
@@ -14,6 +15,8 @@ public abstract class Game<C extends Card<C>, H extends Hand<C>, P extends Playe
     protected final D deck;
 
     protected final int playerSize;
+
+    protected P winner;
 
     public Game(D deck, int playerSize) {
         this.players = new ArrayList<>();
@@ -35,16 +38,42 @@ public abstract class Game<C extends Card<C>, H extends Hand<C>, P extends Playe
         shuffleDeck();
         drawCards();
         play();
-        settleGame();
+        findGameWinner();
+        printGameWinnerName();
     }
 
-    protected abstract void setUpPlayers();
+    protected void setUpPlayers() {
+        if (notEnoughPlayers()) {
+            addAiPlayers();
+        }
+        shufflePlayerOrder();
+    }
+
+    protected void shufflePlayerOrder() {
+        Collections.shuffle(this.players);
+    }
+
+    protected boolean notEnoughPlayers() {
+        return this.players.size() < this.playerSize;
+    }
+
+    protected void addAiPlayers() {
+        for (int playerCount = 0; playerCount < this.playerSize - this.players.size(); playerCount++) {
+            addOneAiPlayer();
+        }
+    }
+
+    protected abstract void addOneAiPlayer();
 
     protected abstract void drawCards();
 
+    protected void eachPlayerDrawsOneCard() {
+        this.players.forEach(player -> player.drawCard(this.deck));
+    }
+
     protected abstract void play();
 
-    protected abstract void settleGame();
+    protected abstract void findGameWinner();
 
     private void namePlayers() {
         this.players.forEach(Player::nameHimself);
@@ -58,5 +87,9 @@ public abstract class Game<C extends Card<C>, H extends Hand<C>, P extends Playe
 
     private void shuffleDeck() {
         this.deck.shuffle();
+    }
+
+    private void printGameWinnerName() {
+        System.out.println("Game winner is " + winner.getName() + "!");
     }
 }
