@@ -1,26 +1,31 @@
 package org.example.uno.players;
 
+import org.example.PlayerInterface;
+import org.example.interfaces.CommandLineInterface;
 import org.example.uno.cards.UnoCard;
-import org.example.CommandLineInterface;
 
 public class UnoHumanPlayer extends UnoPlayer {
 
-    private final CommandLineInterface<UnoCard> commandLineInterface;
+    private final PlayerInterface<UnoCard> playerInterface;
 
     public UnoHumanPlayer() {
-        this.commandLineInterface = new CommandLineInterface<>();
+        this.playerInterface = new CommandLineInterface<>();
+    }
+
+    public UnoHumanPlayer(PlayerInterface<UnoCard> playerInterface) {
+        this.playerInterface = playerInterface;
     }
 
     @Override
     public void nameHimself() {
-        this.name = commandLineInterface.enterName();
+        this.name = playerInterface.enterName();
     }
 
     @Override
     public void showCard(UnoCard top) {
         UnoCard chosen;
         do {
-            chosen = commandLineInterface.choose(this.hand.lookup());
+            chosen = playerInterface.choose(this.hand.lookup());
         } while (hasChosenCard(chosen) && isChosenCardNotMatchedTopCard(chosen, top));
         this.hand.show(chosen);
     }
