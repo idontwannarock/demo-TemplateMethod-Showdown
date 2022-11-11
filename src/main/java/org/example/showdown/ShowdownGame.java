@@ -13,6 +13,8 @@ public class ShowdownGame extends Game<ShowdownCard, ShowdownHand, ShowdownPlaye
 
     private final static int TOTAL_ROUNDS = 13;
 
+    private int round = 0;
+
     public ShowdownGame() {
         super(new ShowdownDeck(), 4);
     }
@@ -23,20 +25,25 @@ public class ShowdownGame extends Game<ShowdownCard, ShowdownHand, ShowdownPlaye
     }
 
     @Override
-    protected void drawCards() {
-        while (deckIsNotDrained()) {
-            eachPlayerDrawsOneCard();
-        }
+    protected boolean isNotReachDrawCardLimit() {
+        return this.deck.hasCardLeft();
     }
 
     @Override
-    protected void play() {
-        for (int round = 0; round < TOTAL_ROUNDS; round++) {
-            eachPlayersShowsOneCard();
-            Map<ShowdownCard, ShowdownPlayer> revealedCards = revealAllShowedCards();
-            ShowdownPlayer winner = findWinner(revealedCards);
-            winnerAddOnePoint(winner);
-        }
+    protected void prepareBeforeFirstRound() {}
+
+    @Override
+    protected boolean isGameNotFinished() {
+        return round < TOTAL_ROUNDS;
+    }
+
+    @Override
+    protected void playOneRound() {
+        eachPlayersShowsOneCard();
+        Map<ShowdownCard, ShowdownPlayer> revealedCards = revealAllShowedCards();
+        ShowdownPlayer winner = findWinner(revealedCards);
+        winnerAddOnePoint(winner);
+        proceedToNextRound();
     }
 
     @Override
@@ -44,10 +51,6 @@ public class ShowdownGame extends Game<ShowdownCard, ShowdownHand, ShowdownPlaye
         this.winner = this.players.stream()
                 .reduce((player1, player2) -> player1.getPoints() - player2.getPoints() > 0 ? player1 : player2)
                 .orElseThrow();
-    }
-
-    private boolean deckIsNotDrained() {
-        return this.deck.hasCardLeft();
     }
 
     private void eachPlayersShowsOneCard() {
@@ -72,5 +75,9 @@ public class ShowdownGame extends Game<ShowdownCard, ShowdownHand, ShowdownPlaye
         winner.addPoint();
         System.out.println("Winner of this round is " + winner.getName());
         System.out.println();
+    }
+
+    private void proceedToNextRound() {
+        this.round++;
     }
 }

@@ -45,10 +45,6 @@ public abstract class Game<C extends Card<C>, H extends Hand<C>, P extends Playe
         shufflePlayerOrder();
     }
 
-    protected void shufflePlayerOrder() {
-        Collections.shuffle(this.players);
-    }
-
     protected boolean notEnoughPlayers() {
         return this.players.size() < this.playerSize;
     }
@@ -61,13 +57,34 @@ public abstract class Game<C extends Card<C>, H extends Hand<C>, P extends Playe
 
     protected abstract void addOneAiPlayer();
 
-    protected abstract void drawCards();
+    protected void shufflePlayerOrder() {
+        Collections.shuffle(this.players);
+    }
+
+    protected void drawCards() {
+        while (isNotReachDrawCardLimit()) {
+            eachPlayerDrawsOneCard();
+        }
+    }
+
+    protected abstract boolean isNotReachDrawCardLimit();
 
     protected void eachPlayerDrawsOneCard() {
         this.players.forEach(player -> player.drawCard(this.deck));
     }
 
-    protected abstract void play();
+    protected void play() {
+        prepareBeforeFirstRound();
+        while (isGameNotFinished()) {
+            playOneRound();
+        }
+    }
+
+    protected abstract void prepareBeforeFirstRound();
+
+    protected abstract boolean isGameNotFinished();
+
+    protected abstract void playOneRound();
 
     protected abstract void findGameWinner();
 

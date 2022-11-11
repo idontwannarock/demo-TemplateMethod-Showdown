@@ -25,32 +25,36 @@ public class UnoGame extends Game<UnoCard, UnoHand, UnoPlayer, UnoDeck> {
     }
 
     @Override
-    protected void drawCards() {
-        for (int cardCount = 0; cardCount < PLAYER_INITIAL_CARDS_COUNT; cardCount++) {
-            eachPlayerDrawsOneCard();
-        }
+    protected boolean isNotReachDrawCardLimit() {
+        return this.players.get(0).cardCount() < PLAYER_INITIAL_CARDS_COUNT;
     }
 
     @Override
-    protected void play() {
-        drawOneCardFromDeckAndPutOnPoolTop();
-        while (everyPlayerHasCardLeftInHand()) {
-            UnoPlayer currentPlayer = getCurrentPlayer();
-            UnoCard currentTopCard = getTopCard();
+    protected void prepareBeforeFirstRound() {
+        this.pool.push(this.deck.drawCard());
+    }
 
-            UnoCard chosenCard = choose(currentPlayer, currentTopCard);
+    @Override
+    protected boolean isGameNotFinished() {
+        return this.players.stream().allMatch(UnoPlayer::hasCardLeft);
+    }
 
-            if (playerChoseNotToPlayCard(chosenCard)) {
-                playerDrawsOneCard(currentPlayer);
-            } else {
-                putCardOnPoolTop(chosenCard);
-            }
+    @Override
+    protected void playOneRound() {
+        UnoPlayer currentPlayer = getCurrentPlayer();
+        UnoCard currentTopCard = getTopCard();
 
-            if (deckIsDrained()) {
-                shufflePollBackToDeck();
-                putCardOnPoolTop(currentTopCard);
-            }
+        UnoCard chosenCard = choose(currentPlayer, currentTopCard);
 
+        if (playerChoseNotToPlayCard(chosenCard)) {
+            playerDrawsOneCard(currentPlayer);
+        } else {
+            putCardOnPoolTop(chosenCard);
+        }
+
+        if (deckIsDrained()) {
+            shufflePollBackToDeck();
+            putCardOnPoolTop(currentTopCard);
         }
     }
 
@@ -58,14 +62,6 @@ public class UnoGame extends Game<UnoCard, UnoHand, UnoPlayer, UnoDeck> {
     protected void findGameWinner() {
         this.winner = this.players.stream()
                 .min(Comparator.comparingInt(UnoPlayer::cardCount)).orElseThrow();
-    }
-
-    private void drawOneCardFromDeckAndPutOnPoolTop() {
-        this.pool.push(this.deck.drawCard());
-    }
-
-    private boolean everyPlayerHasCardLeftInHand() {
-        return this.players.stream().allMatch(UnoPlayer::hasCardLeft);
     }
 
     private UnoPlayer getCurrentPlayer() {
